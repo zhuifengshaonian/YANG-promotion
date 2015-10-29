@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2013 Cisco Systems, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+module types2 {
+    yang-version 1;
+    namespace "urn:simple.types.data.demo";
+    prefix "t2";
+    
+    organization "opendaylight";
+    contact "http://www.opendaylight.org/";
+    
+    description "This is types-data test description";
+
+    revision "2013-02-27" {
+        reference " WILL BE DEFINED LATER";
+    }
+
+}

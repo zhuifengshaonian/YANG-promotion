@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2015 Cisco Systems, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.onos.yangtools.yang.parser.stmt.rfc6020;
+
+import static org.onos.yangtools.yang.parser.spi.meta.StmtContextUtils.firstAttributeOf;
+
+import java.net.URI;
+import java.util.Date;
+
+import org.onos.yangtools.yang.common.QNameModule;
+import org.onos.yangtools.yang.model.api.ModuleIdentifier;
+import org.onos.yangtools.yang.model.api.Rfc6020Mapping;
+import org.onos.yangtools.yang.model.api.meta.EffectiveStatement;
+import org.onos.yangtools.yang.model.api.stmt.ModuleStatement;
+import org.onos.yangtools.yang.model.api.stmt.NamespaceStatement;
+import org.onos.yangtools.yang.model.api.stmt.PrefixStatement;
+import org.onos.yangtools.yang.model.api.stmt.RevisionStatement;
+import org.onos.yangtools.yang.parser.builder.impl.ModuleIdentifierImpl;
+import org.onos.yangtools.yang.parser.spi.ModuleNamespace;
+import org.onos.yangtools.yang.parser.spi.NamespaceToModule;
+import org.onos.yangtools.yang.parser.spi.meta.AbstractStatementSupport;
+import org.onos.yangtools.yang.parser.spi.meta.StmtContext;
+import org.onos.yangtools.yang.parser.spi.meta.StmtContext.Mutable;
+import org.onos.yangtools.yang.parser.spi.source.ImpPrefixToModuleIdentifier;
+import org.onos.yangtools.yang.parser.spi.source.ModuleIdentifierToModuleQName;
+import org.onos.yangtools.yang.parser.spi.source.ModuleNameToModuleQName;
+import org.onos.yangtools.yang.parser.spi.source.ModuleQNameToModuleName;
+import org.onos.yangtools.yang.parser.spi.source.PrefixToModule;
+import org.onos.yangtools.yang.parser.spi.source.SourceException;
+import org.onos.yangtools.yang.parser.stmt.rfc6020.effective.ModuleEffectiveStatementImpl;
+
+import com.google.common.base.Optional;
+
+public class ModuleStatementSupport extends
+        AbstractStatementSupport<String, ModuleStatement, EffectiveStatement<String, ModuleStatement>> {
+
+    private QNameModule qNameModule;
+
+    public ModuleStatementSupport() {
+        super(Rfc6020Mapping.MODULE);
+    }
+
+    @Override
+    public String parseArgumentValue(StmtContext<?, ?, ?> ctx, String value) {
+        return value;
+    }
+
+    @Override
+    public ModuleStatement createDeclared(StmtContext<String, ModuleStatement, ?> ctx) {
+        return new ModuleStatementImpl(ctx);
+    }
+
+    @Override
+    public EffectiveStatement<String, ModuleStatement> createEffective(
+            StmtContext<String, ModuleStatement, EffectiveStatement<String, ModuleStatement>> ctx) {
+        return new ModuleEffectiveStatementImpl(ctx);
+    }
+
+    @Override
+    public void onLinkageDeclared(Mutable<String, ModuleStatement, EffectiveStatement<String, ModuleStatement>> stmt)
+            throws SourceException {
+
+        Optional<URI> moduleNs = Optional.fromNullable(firstAttributeOf(stmt.declaredSubstatements(),
+                NamespaceStatement.class));
+        if (!moduleNs.isPresent()) {
+            throw new IllegalArgumentException("Namespace of the module [" + stmt.getStatementArgument()
+                    + "] is missing.");
+        }
+
+        // FIXME: this is wrong, it has to select the newest revision statement, not the first it encounters.
+        //         YANG files are not required to order revisions
+        Optional<Date> revisionDate = Optional.fromNullable(firstAttributeOf(stmt.declaredSubstatements(),
+                RevisionStatement.class));
+
+        qNameModule = QNameModule.cachedReference(QNameModule.create(moduleNs.get(), revisionDate.orNull()));
+        ModuleIdentifier moduleIdentifier = new ModuleIdentifierImpl(stmt.getStatementArgument(),
+                Optional.<URI> absent(), revisionDate);
+
+        stmt.addContext(ModuleNamespace.class, moduleIdentifier, stmt);
+        stmt.addContext(NamespaceToModule.class, qNameModule, stmt);
+
+        String modulePrefix = firstAttributeOf(stmt.declaredSubstatements(), PrefixStatement.class);
+        if (modulePrefix == null) {
+            throw new IllegalArgumentException("Prefix of the module [" + stmt.getStatementArgument() + "] is missing.");
+        }
+
+        stmt.addToNs(PrefixToModule.class, modulePrefix, qNameModule);
+        stmt.addToNs(ModuleNameToModuleQName.class, stmt.getStatementArgument(), qNameModule);
+        stmt.addToNs(ModuleQNameToModuleName.class, qNameModule, stmt.getStatementArgument());
+        stmt.addToNs(ModuleIdentifierToModuleQName.class, moduleIdentifier, qNameModule);
+
+        stmt.addToNs(ImpPrefixToModuleIdentifier.class, modulePrefix, moduleIdentifier);
+    }
+
+    @Override
+    public void onFullDefinitionDeclared(
+            final Mutable<String, ModuleStatement, EffectiveStatement<String, ModuleStatement>> stmt)
+            throws SourceException {
+
+        stmt.addContext(NamespaceToModule.class, qNameModule, stmt);
+    }
+}

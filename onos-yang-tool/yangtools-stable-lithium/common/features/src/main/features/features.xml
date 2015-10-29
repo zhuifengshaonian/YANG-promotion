@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<!--
+ Copyright (c) 2014 Cisco Systems, Inc. and others.  All rights reserved.
+
+ This program and the accompanying materials are made available under the
+ terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<features name="odl-yangtools-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
+    <feature name='odl-yangtools-all' version='${project.version}' description='onos Yangtools All'>
+        <feature version='${project.version}'>odl-yangtools-common</feature>
+        <feature version='${project.version}'>odl-yangtools-binding</feature>
+        <feature version='${project.version}'>odl-yangtools-models</feature>
+        <feature version='${project.version}'>odl-yangtools-data-binding</feature>
+        <feature version='${project.version}'>odl-yangtools-binding-generator</feature>
+        <feature version='${project.version}'>odl-yangtools-restconf</feature>
+    </feature>
+
+    <feature name='odl-yangtools-models' version='${project.version}' description='onos :: Yangtools :: Models'>
+        <feature version='${project.version}'>odl-yangtools-binding</feature>
+        <bundle>mvn:org.onos.yangtools.model/iana-afn-safi/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/iana-if-type-2014-05-08/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-inet-types/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-interfaces/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-yang-types/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-yang-types-20130715/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-restconf/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/yang-ext/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/onos-l2-types/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-ted/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-topology/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-topology-isis/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-topology-ospf/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools.model/ietf-topology-l3-unicast-igp/{{VERSION}}</bundle>
+       </feature>
+
+    <feature name='odl-yangtools-data-binding' version='${project.version}' description='onos :: Yangtools :: Data Binding'>
+        <feature version='${project.version}'>odl-yangtools-binding</feature>
+        <!--bundle>mvn:org.onos.yangtools.thirdparty/antlr4-runtime-osgi-nohead/{{VERSION}}</bundle-->
+        <bundle>mvn:org.onos.yangtools/yang-data-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-data-impl/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-data-operations/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-data-util/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-model-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-model-util/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-parser-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-parser-impl/{{VERSION}}</bundle>
+
+        <!-- GSON-based JSON codec. Can be split out -->
+        <bundle>mvn:com.google.code.gson/gson/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-data-codec-gson/{{VERSION}}</bundle>
+    </feature>
+
+    <feature name='odl-yangtools-binding' version='${project.version}' description='onos :: Yangtools :: Binding'>
+        <feature version='${project.version}'>odl-yangtools-common</feature>
+        <bundle>mvn:org.onos.yangtools/yang-binding/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/util/{{VERSION}}</bundle>
+        <bundle>mvn:com.github.romix/java-concurrent-hash-trie-map/{{VERSION}}</bundle>
+    </feature>
+
+    <feature name='odl-yangtools-common' version='${project.version}' description='onos :: Yangtools :: Common'>
+        <bundle>mvn:com.google.guava/guava/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/concepts/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-common/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/util/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/object-cache-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/object-cache-guava/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/object-cache-noop/{{VERSION}}</bundle>
+        <bundle>mvn:com.github.romix/java-concurrent-hash-trie-map/{{VERSION}}</bundle>
+    </feature>
+    <feature name='odl-yangtools-binding-generator' version='${project.version}' description='onos :: Yangtools :: Binding Generator'>
+        <feature version='${project.version}'>odl-yangtools-data-binding</feature>
+        <bundle>mvn:org.javassist/javassist/{{VERSION}}</bundle>
+        <bundle>mvn:org.apache.commons/commons-lang3/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-generator-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-generator-impl/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-generator-spi/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-generator-util/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-model-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-type-provider/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/binding-data-codec/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-model-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-model-util/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/yang-parser-api/{{VERSION}}</bundle>
+    </feature>
+    <feature name='odl-yangtools-restconf' version='${project.version}' description='onos :: Yangtools :: Restconf'>
+        <bundle>mvn:org.onos.yangtools/restconf-client-api/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/restconf-client-impl/{{VERSION}}</bundle>
+        <bundle>mvn:org.onos.yangtools/restconf-common/{{VERSION}}</bundle>
+     </feature>
+</features>

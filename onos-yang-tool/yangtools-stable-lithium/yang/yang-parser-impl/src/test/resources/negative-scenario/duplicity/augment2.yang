@@ -1,0 +1,20 @@
+module augment2 {
+    yang-version 1;
+    namespace "urn:simple.augment2.demo";
+    prefix "a2";
+
+    import augment0 {
+        prefix "a0";
+    }
+
+    revision "2014-06-02";
+
+    augment "/a0:foo/a0:bar/a0:choice-ext" {
+        anyxml delta;
+    }
+
+    augment "/a0:foo/a0:bar/a0:choice-ext" {
+        anyxml delta;
+    }
+
+}

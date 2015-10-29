@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=4 tabstop=4: -->
+<!--
+ Copyright (c) 2013 Cisco Systems, Inc. and others.  All rights reserved.
+
+ This program and the accompanying materials are made available under the
+ terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ and is available at http://www.eclipse.org/legal/epl-v10.html
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+      <groupId>org.onos.yangtools</groupId>
+      <artifactId>yangtools-parent</artifactId>
+      <version>0.7.2-SNAPSHOT</version>
+      <relativePath>common/parent</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>yangtools-aggregator</artifactId>
+    <name>yangtools</name> <!-- Used by Sonar to set project name -->
+    <packaging>pom</packaging>
+
+    <scm>
+        <connection>scm:git:ssh://git.onos.org:29418/yangtools.git</connection>
+        <developerConnection>scm:git:ssh://git.onos.org:29418/yangtools.git</developerConnection>
+        <url>https://wiki.onos.org/view/YANG_Tools:Main</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <modules>
+        <module>code-generator</module>
+        <module>common</module>
+        <!--module>integration-test</module-->
+        <module>model</module>
+        <module>restconf</module>
+        <module>websocket</module>
+        <module>yang</module>
+        <module>yang-validation-tool</module>
+      <!-- module>third-party</module -->
+    </modules>
+
+    <profiles>
+      <profile>
+        <id>benchmarks</id>
+        <activation>
+          <activeByDefault>false</activeByDefault>
+        </activation>
+        <modules>
+          <module>benchmarks</module>
+        </modules>
+      </profile>
+    </profiles>
+
+    <build>
+        <pluginManagement>        
+            <plugins>
+                <!--plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-checkstyle-plugin</artifactId>
+                 <configuration>
+                   <failOnViolation>false</failOnViolation>
+                   <configLocation>checkstyle-logging.xml</configLocation>
+                   <consoleOutput>true</consoleOutput>
+                   <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                   <sourceDirectory>${project.basedir}</sourceDirectory>
+                   <includes>**\/*.java,**\/*.xml,**\/*.ini,**\/*.sh,**\/*.bat,**\/*.yang</includes>
+                   <excludes>**\/target\/,**\/bin\/,**\/target-ide\/,**\/src/main/yang-gen-config\/,**\/src/main/yang-gen-sal\/,**\/src/main/xtend-gen\/</excludes>
+                 </configuration>
+                 <dependencies>
+                   <dependency>
+                     <groupId>org.onos.yangtools</groupId>
+                     <artifactId>checkstyle-logging</artifactId>
+                     <version>${project.version}</version>
+                   </dependency>
+                 </dependencies>
+                 <executions>
+                   <execution>
+                     <goals>
+                       <goal>check</goal>
+                     </goals>
+                   </execution>
+                 </executions>
+               </plugin-->
+            </plugins>            
+        </pluginManagement>
+    </build>
+</project>

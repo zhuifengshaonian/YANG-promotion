@@ -1,0 +1,45 @@
+package org.onos.yangtools.yang.data.impl.schema.tree;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import java.util.Collection;
+import org.onos.yangtools.yang.data.api.YangInstanceIdentifier.PathArgument;
+import org.onos.yangtools.yang.data.api.schema.NormalizedNode;
+import org.onos.yangtools.yang.data.api.schema.NormalizedNodeContainer;
+import org.onos.yangtools.yang.data.api.schema.tree.DataTreeCandidateNode;
+import org.onos.yangtools.yang.data.api.schema.tree.ModificationType;
+
+final class RecursiveReplaceCandidateNode extends AbstractDataTreeCandidateNode {
+    private final NormalizedNodeContainer<?, PathArgument, NormalizedNode<?, ?>> oldData;
+
+    public RecursiveReplaceCandidateNode(final NormalizedNodeContainer<?, PathArgument, NormalizedNode<?, ?>> oldData,
+            final NormalizedNodeContainer<?, PathArgument, NormalizedNode<?, ?>> newData) {
+        super(newData);
+        this.oldData = Preconditions.checkNotNull(oldData);
+    }
+
+    @Override
+    public ModificationType getModificationType() {
+        return ModificationType.WRITE;
+    }
+
+    @Override
+    public Optional<NormalizedNode<?, ?>> getDataAfter() {
+        return super.dataOptional();
+    }
+
+    @Override
+    public Optional<NormalizedNode<?, ?>> getDataBefore() {
+        return Optional.<NormalizedNode<?, ?>>of(oldData);
+    }
+
+    @Override
+    public DataTreeCandidateNode getModifiedChild(final PathArgument identifier) {
+        return deltaChild(oldData, getData(), identifier);
+    }
+
+    @Override
+    public Collection<DataTreeCandidateNode> getChildNodes() {
+        return deltaChildren(oldData, getData());
+    }
+}

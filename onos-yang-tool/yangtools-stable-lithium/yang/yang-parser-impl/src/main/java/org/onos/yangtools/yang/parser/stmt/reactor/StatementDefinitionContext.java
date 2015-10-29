@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2015 Cisco Systems, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.onos.yangtools.yang.parser.stmt.reactor;
+
+import org.onos.yangtools.yang.common.QName;
+import org.onos.yangtools.yang.model.api.meta.DeclaredStatement;
+import org.onos.yangtools.yang.model.api.meta.EffectiveStatement;
+import org.onos.yangtools.yang.model.api.meta.IdentifierNamespace;
+import org.onos.yangtools.yang.model.api.meta.StatementDefinition;
+import org.onos.yangtools.yang.parser.spi.meta.ModelProcessingPhase;
+import org.onos.yangtools.yang.parser.spi.meta.StatementFactory;
+import org.onos.yangtools.yang.parser.spi.meta.StatementSupport;
+import org.onos.yangtools.yang.parser.spi.meta.StmtContext;
+import org.onos.yangtools.yang.parser.spi.meta.StmtContext.Mutable;
+import org.onos.yangtools.yang.parser.spi.source.SourceException;
+
+public class StatementDefinitionContext<A,D extends DeclaredStatement<A>,E extends EffectiveStatement<A,D>> {
+    private final StatementSupport<A,D,E> support;
+    public StatementDefinitionContext(StatementSupport<A,D,E> support) {
+        this.support= support;
+    }
+
+
+    public StatementFactory<A,D,E> getFactory() {
+        return support;
+    }
+
+    public A parseArgumentValue(StmtContext<A,D,E> context, String value) throws SourceException {
+        return support.parseArgumentValue(context,value);
+    }
+
+
+    public void checkNamespaceAllowed(Class<? extends IdentifierNamespace<?,?>> namespace) {
+        // Noop
+    }
+
+    public StatementDefinition getPublicView() {
+        return support.getPublicView();
+    }
+
+    public boolean onStatementAdded(Mutable<A,D,E> stmt) {
+        return false;
+    }
+
+
+    public void onDeclarationFinished(Mutable<A,D,E> statement, ModelProcessingPhase phase) throws SourceException {
+        switch (phase) {
+        case SOURCE_LINKAGE:
+            support.onLinkageDeclared(statement);
+            break;
+        case STATEMENT_DEFINITION:
+            support.onStatementDefinitionDeclared(statement);
+            break;
+        case FULL_DECLARATION:
+            support.onFullDefinitionDeclared(statement);
+            break;
+        default:
+            break;
+        }
+    }
+
+
+
+    public Class<?> getRepresentingClass() {
+        return support.getDeclaredRepresentationClass();
+    }
+
+
+    public boolean hasArgument() {
+        return support.getArgumentName() != null;
+    }
+
+
+    public QName getStatementName() {
+        return support.getStatementName();
+    }
+
+}
