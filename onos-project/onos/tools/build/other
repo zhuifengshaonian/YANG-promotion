@@ -1,0 +1,35 @@
+#!/bin/bash
+
+start_mv(){
+	
+	m=`cat ${M2_REPO}`/$1 | grep bundle | sed 's/<[^<>]*>//g' | sed '.*n://g'`
+
+	for n in $m
+	do
+      VERSION=${n##*/}
+      FILE_DOT=${n%/*}
+      PAC_PATH_PRE=${FILE_DOT%%/*}
+      PAC_PATH=${PAC_PATH_PRE//\./\/}
+      PAC_NAME=${FILE_DOT##*/}
+      REAL_PATH=${PAC_PATH}/${PAC_NAME}/${VERSION}
+      FINAL=${M2_REPO}/${REAL_PATH}
+      if [[ -e $FINAL ]]; then
+        KARAF_DIR=${ONOS_STAGE}/${KARAF_DIST}/system/${REAL_PATH}
+        if [[ ! -e $KARAF_DIR ]]; then
+           mkdir -p $KARAF_DIR
+           cp $FINAL/*.jar $KARAF_DIR
+        fi
+      fi
+
+      CONFIG_FILE=org/ops4j/pax/web/pax-web-feature/3.1.4
+      if [[ -e ${M2_REPO}/${CONFIG_FILE } ]]; then
+         cp ${M2_REPO}/${CONFIG_FILE}/* ${ONOS_STAGE}/${KARAF_DIST}/system/${CONFIG_FILE}
+      fi
+	done
+}
+
+start_mv org/apache/karaf/features/spring/3.0.3/spring-3.0.3-features.xml
+start_mv org/onosproject/onos-feature/1.2.2-SNAPSHOT/onos-features-1.2.2-SNAPSHOT-features.xml
+start_mv org/apache/karaf/features/standard/3.0.3/standard-3.0.3-features.xml
+start_mv org/apache/karaf/features/enterprise/3.0.3/enterprise-3.0.3-features.xml
+start_mv org/ops4j/pax/web/pax-web-features/3.1.4/pax-web-features-3.1.4-features.xml
