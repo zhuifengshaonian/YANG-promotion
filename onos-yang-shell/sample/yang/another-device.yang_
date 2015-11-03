@@ -1,0 +1,35 @@
+module another-device {
+	yang-version 1;
+	namespace "urn:onos:yangpromotion:def:l3device";
+	prefix "athdev";
+
+	import core-device {prefix core-dev; revision-date "2015-10-01";}
+	import ietf-inet-types {prefix inet; revision-date "2010-09-24";}
+	import yang-ext {prefix ext; revision-date "2013-07-09";}
+
+	revision "2015-10-14" {
+		description
+		  "reworked to give modules their own space";
+	}
+
+	container another-device {
+		uses core-dev:core-device {
+			augment device {
+			  ext:augment-identifier "another-device";
+			  uses hahah;
+			}
+		}
+	}
+
+	grouping hahah {
+	  leaf test1 {
+	  	type string;
+	  }
+	  leaf test2 {
+	    type string;
+	  }
+	  leaf test3 {
+	    type string;
+	  }
+	}
+}
